@@ -24,6 +24,7 @@ namespace GroupChatApplication.Hub
             // notify the group
             await Clients.Group(userRoomConnection.RoomName)
                 .SendAsync(method: "ReceiveMessage", "Lets Program Bot", $"{userRoomConnection.UserName} has joined the group");
+            await SendConnectedUser(userRoomConnection.RoomName);
         }
 
         //method for sending a message in the group
@@ -34,6 +35,27 @@ namespace GroupChatApplication.Hub
                 await Clients.Group(userRoomConnection.RoomName)
                     .SendAsync(method: "ReceiveMessage", userRoomConnection.UserName, message, DateTime.Now);
             }
+        }
+
+        // to send user disconnected notification
+        public override Task OnDisconnectedAsync(Exception? exception)
+        {
+            if(!_connection.TryGetValue(Context.ConnectionId, out UserRoomConnection? roomConnection))
+            {
+                return base.OnDisconnectedAsync(exception);
+            }
+            Clients.Group(roomConnection.RoomName)
+                .SendAsync(method: "ReceiveMessage", "Lets Program Bot", $"{roomConnection.UserName} has left the group");
+            SendConnectedUser(roomConnection.RoomName);
+            return base.OnDisconnectedAsync(exception);
+        }
+
+        //to get the list of users for a specific room
+        public Task SendConnectedUser(string room)
+        {
+            var users = _connection.Values.Where(x => x.RoomName == room).Select(x => x.UserName);
+            return Clients.Group(room)
+                .SendAsync(method: "ConnectedUsers", users);
         }
     }
 }

@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 
-builder.Services.AddSingleton<IDictionary<string, UserRoomConnection>>(IServiceProvider => 
+builder.Services.AddSingleton<IDictionary<string, UserRoomConnection>>(opt => 
     new Dictionary<string, UserRoomConnection>());
 
 var app = builder.Build();

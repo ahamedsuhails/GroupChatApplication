@@ -1,0 +1,89 @@
+.parent-container {
+  width: 70%;
+  margin-top: 50px;
+  margin-left: 300px;
+  height: 70vh;
+  border: 3px solid #ccc;
+  padding: 10px;
+}
+
+.group-chat-container {
+  display: flex;
+  height: 60vh;
+}
+
+.header-container {
+  display: flex;
+  text-align: left;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #ccc; /* Add margin between the header and left section */
+}
+
+.btn {
+  margin-left: auto;
+}
+
+.users-list {
+  width: 30%;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+}
+
+.users-list h3 {
+  margin-bottom: 10px;
+}
+
+.users-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.users-list li {
+  margin-bottom: 10px;
+}
+
+.chat-container {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #ccc;
+  padding-left: 10px;
+}
+
+.chat-messages {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.username {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.chat-input {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.chat-input input {
+  flex-grow: 1;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.chat-input button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background-color: #0056b3;
+}

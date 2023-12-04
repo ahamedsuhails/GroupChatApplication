@@ -23,6 +23,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+
 // configuring signalR hub
 app.MapHub<ChatHub>(pattern: "/chat");
 

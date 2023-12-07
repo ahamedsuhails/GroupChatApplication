@@ -20,11 +20,11 @@ namespace GroupChatApplication.Hub
             //save connection to dictionary
             _connection[Context.ConnectionId] = userRoomConnection;
             // use signalR Hub methods to join a group
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName: userRoomConnection.RoomName);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName: userRoomConnection.Room);
             // notify the group
-            await Clients.Group(userRoomConnection.RoomName)
-                .SendAsync(method: "ReceiveMessage", "Lets Program Bot", $"{userRoomConnection.UserName} has joined the group");
-            await SendConnectedUser(userRoomConnection.RoomName);
+            await Clients.Group(userRoomConnection.Room)
+                .SendAsync(method: "ReceiveMessage", "Lets Program Bot", $"{userRoomConnection.User} has joined the group", DateTime.Now);
+            await SendConnectedUser(userRoomConnection.Room);
         }
 
         //method for sending a message in the group
@@ -32,8 +32,8 @@ namespace GroupChatApplication.Hub
         {
             if (_connection.TryGetValue(Context.ConnectionId, out UserRoomConnection? userRoomConnection))
             {
-                await Clients.Group(userRoomConnection.RoomName)
-                    .SendAsync(method: "ReceiveMessage", userRoomConnection.UserName, message, DateTime.Now);
+                await Clients.Group(userRoomConnection.Room)
+                    .SendAsync(method: "ReceiveMessage", userRoomConnection.User, message, DateTime.Now);
             }
         }
 
@@ -44,16 +44,16 @@ namespace GroupChatApplication.Hub
             {
                 return base.OnDisconnectedAsync(exception);
             }
-            Clients.Group(roomConnection.RoomName)
-                .SendAsync(method: "ReceiveMessage", "Lets Program Bot", $"{roomConnection.UserName} has left the group");
-            SendConnectedUser(roomConnection.RoomName);
+            Clients.Group(roomConnection.Room)
+                .SendAsync(method: "ReceiveMessage", "Lets Program Bot", $"{roomConnection.User} has left the group", DateTime.Now);
+            SendConnectedUser(roomConnection.Room);
             return base.OnDisconnectedAsync(exception);
         }
 
         //to get the list of users for a specific room
         public Task SendConnectedUser(string room)
         {
-            var users = _connection.Values.Where(x => x.RoomName == room).Select(x => x.UserName);
+            var users = _connection.Values.Where(x => x.Room == room).Select(x => x.User);
             return Clients.Group(room)
                 .SendAsync(method: "ConnectedUsers", users);
         }

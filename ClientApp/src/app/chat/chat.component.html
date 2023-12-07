@@ -1,7 +1,7 @@
 <div class="parent-container">
   <div class="header-container">
     <h3>Welcome to the group chat.</h3>
-    <button class="btn btn-danger">Leave Chat</button>
+    <button (click)="leaveChat()" class="btn btn-danger">Leave Chat</button>
   </div>
   <div class="group-chat-container">
     <!-- Left side - Users list -->
@@ -18,13 +18,46 @@
     <div class="chat-container">
       <div class="chat-messages">
         <div class="message">
-          <span class="username">Dummy User:</span>
-          <span class="text">Dummy Message</span>
+          <ng-container *ngFor="let message of messages">
+            <div
+              [ngClass]="{
+                incoming_msg: message.user != loggedInUser,
+                outgoing_msg: message.user == loggedInUser
+              }"
+            >
+              <div
+                *ngIf="message.user != loggedInUser"
+                class="incoming-msg-img"
+              >
+                <img src="" alt="" />
+              </div>
+              <div *ngIf="message.user != loggedInUser" class="received_msg">
+                <div class="received_withd_msg">
+                  <p>{{ message.message }}</p>
+                  <span class="time_date"
+                    >{{ message.user }} |
+                    {{ message.messageTime | date : "medium" }}</span
+                  >
+                </div>
+              </div>
+              <div *ngIf="message.user === loggedInUser" class="sent_msg">
+                <p>{{ message.message }}</p>
+                <span class="time_date"
+                  >{{ message.user }} |
+                  {{ message.messageTime | date : "mediun" }}></span
+                >
+              </div>
+            </div>
+          </ng-container>
         </div>
       </div>
       <div class="chat-input">
-        <input placeholder="Type a message..." />
-        <button>Send</button>
+        <input
+          (keydown.enter)="sendMessage()"
+          [(ngModel)]="inputMessage"
+          placeholder="Type a message..."
+        />
+        <button (click)="sendMessage()">Send</button>
       </div>
     </div>
 
